@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2020-08-30T00:29:31.818650+00:00",
+  "timestamp": "2020-09-03T00:44:09.252798+00:00",
   "repo": "mlswg/mls-protocol",
   "labels": [
     {
@@ -3967,15 +3967,15 @@
       "id": "MDU6SXNzdWU2NzkxMTczNjM=",
       "title": "Is the path secret used as PRK when doing Kdf.Expand?",
       "url": "https://github.com/mlswg/mls-protocol/issues/392",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "yihuang",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "When evolving the ratchet tree, we'll do:\r\n```\r\npath_secret[n] = ExpandWithLabel(path_secret[n-1],\r\n                                   \"path\", \"\", KEM.Nsk)\r\n```\r\nDoes the `path_secret[n-1]` used as the `PRK` directly?\r\n```\r\n   HKDF-Expand(PRK, info, L) -> OKM\r\n```\r\nIf that's the case, does that mean ` KEM.Nsk` should be `>= Kdf.Nh`?\r\n\r\nOr should we do an extract before the expand?",
       "createdAt": "2020-08-14T12:14:46Z",
-      "updatedAt": "2020-08-25T18:13:18Z",
-      "closedAt": null,
+      "updatedAt": "2020-09-03T00:30:22Z",
+      "closedAt": "2020-09-03T00:30:22Z",
       "comments": [
         {
           "author": "Bren2010",
@@ -22647,7 +22647,7 @@
       ],
       "body": "Changes to key schedule and corresponding directions on use of PSKs for group recovery, re-initialization, sub-group branching, and external PSK injection.",
       "createdAt": "2020-05-16T19:48:40Z",
-      "updatedAt": "2020-08-28T15:00:33Z",
+      "updatedAt": "2020-09-02T19:11:02Z",
       "baseRepository": "mlswg/mls-protocol",
       "baseRefName": "master",
       "baseRefOid": "28c6099e92f2b4767e247cd2016abd760a6620d0",
@@ -23351,6 +23351,84 @@
               "body": "I think we do to properly separate the keys depending on their use. This is comparable to TLS, where improper separation between application- and resumption PSKs led to problems down the road. However, we sill only need to derive a single value off of the Key Schedule, as the type is used later when the PSK gets injected into the Key Schedule.",
               "createdAt": "2020-08-28T15:00:33Z",
               "updatedAt": "2020-08-28T15:00:33Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NDgxMTYyOTUy",
+          "commit": {
+            "abbreviatedOid": "b8e1283"
+          },
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2020-09-02T18:36:38Z",
+          "updatedAt": "2020-09-02T18:36:39Z",
+          "comments": [
+            {
+              "originalPosition": 269,
+              "body": "Tweaked the title a little. It's now \"Linking a New Group to an Existing Group\".",
+              "createdAt": "2020-09-02T18:36:39Z",
+              "updatedAt": "2020-09-02T18:36:39Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NDgxMTYzNzA0",
+          "commit": {
+            "abbreviatedOid": "b8e1283"
+          },
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2020-09-02T18:37:40Z",
+          "updatedAt": "2020-09-02T18:37:40Z",
+          "comments": [
+            {
+              "originalPosition": 281,
+              "body": "I've specified the nonce length to be `KDF.Nh` and added an open issue regarding the possibility to avoid the nonce altogether using the GroupId of the new group.",
+              "createdAt": "2020-09-02T18:37:40Z",
+              "updatedAt": "2020-09-02T18:37:40Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NDgxMTcwNDUy",
+          "commit": {
+            "abbreviatedOid": "b8e1283"
+          },
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2020-09-02T18:47:28Z",
+          "updatedAt": "2020-09-02T19:11:02Z",
+          "comments": [
+            {
+              "originalPosition": 122,
+              "body": "OK, I can live with this.",
+              "createdAt": "2020-09-02T18:47:28Z",
+              "updatedAt": "2020-09-02T19:11:02Z"
+            },
+            {
+              "originalPosition": 281,
+              "body": "^^^ still outstanding",
+              "createdAt": "2020-09-02T18:48:31Z",
+              "updatedAt": "2020-09-02T19:11:02Z"
+            },
+            {
+              "originalPosition": 115,
+              "body": "^^^ still outstanding",
+              "createdAt": "2020-09-02T18:48:38Z",
+              "updatedAt": "2020-09-02T19:11:02Z"
+            },
+            {
+              "originalPosition": 349,
+              "body": "> The server would be able to send the message themselves (if they're \"preconfigured\") and the message would be authenticated, right?\r\n\r\nYep, it would be sent as an MLSPlaintext, so the normal authentication stuff applies.  \r\n\r\nSyntactically, I think it would be even simpler than what you lay out.  We would just define a Close object parallel to commit that has the forward-pointer to the new group (NB: see below).  So where you have the version/cipher_suite fields, we would just have Close object.\r\n\r\nCouple of other points:\r\n\r\n* Is this message useful when closing the group *without a successor*?\r\n    * If so, then the forward pointer needs to be optional\r\n    * If not (so there's always a successor), suggest renaming Close -> Replace\r\n* `version+cipher_suite` seems like an odd way to refer to a new group.  Propose we just send the Welcome or H(Welcome) here, since that will implicitly bind to these fields as well as the group ID, membership, etc.  \r\n\r\n```\r\nstruct {\r\n    opaque welcome_hash<0..255>; // or \r\n    Welcome welcome;\r\n} Replace;\r\n```\r\n\r\n* Just to confirm, the receiver processing of this message is:\r\n    * Ratchet the key schedule forward with commit_secret = 0 to get the last epoch\r\n    * Verify the confirmation tag in the new/last epoch\r\n    * Produce a PSK of type `reinit` (or maybe `replace`), which can be referenced in the new Welcome\r\n* ... which means the sender processing would be:\r\n    * Create a Welcome for the new group referencing the reinit PSK (as groupID + last_epoch)\r\n    * Ratchet to the last epoch => reinit PSK\r\n    * Create MLSPlaintext(Replace(H(Welcome)))\r\n\r\nA little convoluted, but not an unexpected amount of interlock.\r\n\r\n",
+              "createdAt": "2020-09-02T18:54:04Z",
+              "updatedAt": "2020-09-02T19:11:02Z"
             }
           ]
         }
@@ -26852,24 +26930,26 @@
       "id": "MDExOlB1bGxSZXF1ZXN0NDczNDIwODAw",
       "title": "Use full-size path secrets",
       "url": "https://github.com/mlswg/mls-protocol/pull/398",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "bifurcation",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Fixes #392 \r\n\r\n(Also, when I made the change from `KEM.Nsk` to `KDF.Nh`, I realized that the calls to `ExpandWithLabel` all had the same structure as `DeriveSecret`, so I changed to just call DeriveSecret directly.)",
       "createdAt": "2020-08-25T19:45:43Z",
-      "updatedAt": "2020-08-25T21:27:22Z",
+      "updatedAt": "2020-09-03T00:30:22Z",
       "baseRepository": "mlswg/mls-protocol",
       "baseRefName": "master",
       "baseRefOid": "28c6099e92f2b4767e247cd2016abd760a6620d0",
       "headRepository": "mlswg/mls-protocol",
       "headRefName": "full-size-secrets",
       "headRefOid": "5fbcb392b853ba30754c2dc6e1b57136b49f056f",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2020-09-03T00:30:22Z",
+      "mergedAt": "2020-09-03T00:30:22Z",
+      "mergedBy": "bifurcation",
+      "mergeCommit": {
+        "oid": "1d5e14d79435834bc5cab6c7aa9e2fcdd6afeabc"
+      },
       "comments": [],
       "reviews": [
         {
@@ -26892,26 +26972,96 @@
       "id": "MDExOlB1bGxSZXF1ZXN0NDc0MTE2MzYy",
       "title": "Use UpdatePath instead of Commit when describing tree updates",
       "url": "https://github.com/mlswg/mls-protocol/pull/399",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "chelseakomlo",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "This PR updates two sections to reference generating and sending an `UpdatePath` message, as not all Commits transmit fresh key material (as discussed in #391). \r\n\r\nThis PR also includes light editorial edits for clarity and adds detail around the steps to perform an update.\r\n\r\nSection 7.7 `Update Paths` currently says that \"each MLS Commit message needs to transmit a KeyPackage leaf and node values along its direct path\", but section 10.2 `Commit` says that an UpdatePath is optional. I can update 7.7 as well, if 10.2 is correct.",
       "createdAt": "2020-08-26T19:44:57Z",
-      "updatedAt": "2020-08-26T19:44:57Z",
+      "updatedAt": "2020-09-03T00:30:01Z",
       "baseRepository": "mlswg/mls-protocol",
       "baseRefName": "master",
       "baseRefOid": "28c6099e92f2b4767e247cd2016abd760a6620d0",
       "headRepository": "chelseakomlo/mls-protocol",
       "headRefName": "commit-to-update-path-specification",
-      "headRefOid": "aa2cdfacefb791947c05c2e4ef1cc8f0bc620a8a",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
-      "reviews": []
+      "headRefOid": "8b3dd5d33fa2d689534035b6cbbde4799527f407",
+      "closedAt": "2020-09-03T00:30:01Z",
+      "mergedAt": "2020-09-03T00:30:01Z",
+      "mergedBy": "bifurcation",
+      "mergeCommit": {
+        "oid": "d50188c7549d640d557b2b6524d412915eed48ae"
+      },
+      "comments": [
+        {
+          "author": "chelseakomlo",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I went ahead and changed Section 7.7 to specify that MLS commits may optionally transmit updates for consistency with Section 10.2",
+          "createdAt": "2020-09-01T03:09:31Z",
+          "updatedAt": "2020-09-01T03:09:31Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NDc5NzM5MzQx",
+          "commit": {
+            "abbreviatedOid": "0882711"
+          },
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2020-09-01T13:27:20Z",
+          "updatedAt": "2020-09-01T13:29:15Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "```suggestion\r\nA member of an MLS group advances the key schedule to provide forward secrecy\r\nand post-compromise security by providing the group with fresh key material to\r\nbe added into the group's shared secret. To do so, the member generates fresh key\r\n```\r\n\r\n... and change to present tense in the rest of the sentence",
+              "createdAt": "2020-09-01T13:27:20Z",
+              "updatedAt": "2020-09-03T00:27:48Z"
+            },
+            {
+              "originalPosition": 54,
+              "body": "```suggestion\r\nthis update to other members of the group in a Commit message, who\r\n```\r\n\r\n... or \"by including an UpdatePath in a Commit message\"",
+              "createdAt": "2020-09-01T13:28:48Z",
+              "updatedAt": "2020-09-03T00:27:48Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NDgxMzk5ODc0",
+          "commit": {
+            "abbreviatedOid": "94bc2ec"
+          },
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2020-09-03T00:27:41Z",
+          "updatedAt": "2020-09-03T00:27:41Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "```suggestion\r\nA member of an MLS group advances the key schedule to provide forward secrecy\r\n```",
+              "createdAt": "2020-09-03T00:27:41Z",
+              "updatedAt": "2020-09-03T00:27:48Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NDgxNDAwMDUy",
+          "commit": {
+            "abbreviatedOid": "8b3dd5d"
+          },
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2020-09-03T00:28:20Z",
+          "updatedAt": "2020-09-03T00:28:20Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
