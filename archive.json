@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2020-09-06T00:46:49.942836+00:00",
+  "timestamp": "2020-09-08T00:45:26.340293+00:00",
   "repo": "mlswg/mls-protocol",
   "labels": [
     {
@@ -22647,7 +22647,7 @@
       ],
       "body": "Changes to key schedule and corresponding directions on use of PSKs for group recovery, re-initialization, sub-group branching, and external PSK injection.",
       "createdAt": "2020-05-16T19:48:40Z",
-      "updatedAt": "2020-09-04T06:35:00Z",
+      "updatedAt": "2020-09-06T07:55:03Z",
       "baseRepository": "mlswg/mls-protocol",
       "baseRefName": "master",
       "baseRefOid": "28c6099e92f2b4767e247cd2016abd760a6620d0",
@@ -23449,6 +23449,46 @@
               "body": "Very good points. Using the Welcome message seems like an elegant way to link the groups.\r\nRegarding ReInit vs. Replace, I have no strong opinion on that. Replace seems a little more direct, so I'll go with that for now. I'll make the changes either today or over the weekend so hopefully we can get the green light for a merge on Tuesday :-)",
               "createdAt": "2020-09-04T06:35:00Z",
               "updatedAt": "2020-09-04T06:35:00Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NDgzMTE3NTI2",
+          "commit": {
+            "abbreviatedOid": "05d1f8a"
+          },
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2020-09-06T07:05:35Z",
+          "updatedAt": "2020-09-06T07:05:35Z",
+          "comments": [
+            {
+              "originalPosition": 349,
+              "body": "I just noticed that if we use a Welcome message (or its hash) in the Replace message, then the Server won't be able to send it, because it lacks the necessary information to craft it. So until we find a better way of doing it, I'm going with the way I originally sketched. Let me know if you have another idea.\r\n\r\n(The `Capabilities` struct is pretty close to what we need, but the name is a little misleading in that context.)",
+              "createdAt": "2020-09-06T07:05:35Z",
+              "updatedAt": "2020-09-06T07:33:30Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NDgzMTIwODc0",
+          "commit": {
+            "abbreviatedOid": "05d1f8a"
+          },
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2020-09-06T07:55:03Z",
+          "updatedAt": "2020-09-06T07:55:03Z",
+          "comments": [
+            {
+              "originalPosition": 349,
+              "body": "If we go for a Handshake Message as opposed to a Proposal, it's also not clear, which group member sends the Welcome message for the new group, as the Close message can come from the Server itself. The Server could nominate a member, but it doesn't know if that member is online and so there is a risk that other members would then have to wait for that member to come online. The other possibility is to just have any member do it, which would create a race condition and possibly multiple follow-up groups.\r\n\r\n Do you have an idea on how to deal with that? Since there is otherwise not that much of a difference between Handshake Message and Proposal, I'm inclined to stick with a Proposal, but rename it to \"Close\" and make the content optional.",
+              "createdAt": "2020-09-06T07:55:03Z",
+              "updatedAt": "2020-09-06T07:55:03Z"
             }
           ]
         }
