@@ -1938,18 +1938,18 @@ Internet-Draft                     MLS                    September 2020
 
 8.1.  Content Signing
 
-   The "signature" field in an MLSPlaintext object is computed using the
-   signing private key corresponding to the credential at the leaf in
-   the tree indicated by the sender field.  The signature covers the
-   plaintext metadata and message content, which is all of MLSPlaintext
-   except for the "signature" field.  The signature also covers the
-   GroupContext for the current epoch, so that signatures are specific
-   to a given group and epoch.
+   The "signature" field in an MLSPlaintext object authenticates the
+   sender of the MLSPlaintext message.  The input to the signature is an
+   MLSPlaintextTBS structure, which encodes the content and metadata of
+   the message as well a context for the signature that associates to
+   the group messages sent within the group.
 
-
-
-
-
+   In cases where the sender is a member of the group, the context
+   contains the GroupContext for the current epoch and a "membership
+   token" that authenticates that the sender is a member of the group.
+   As a result, for messages sent within a group, the signature
+   authenticates not only the member's individual identity, but also
+   their membership in the group.
 
 
 

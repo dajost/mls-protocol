@@ -2839,14 +2839,17 @@ verifying the content signature.<a href="#section-8-7" class="pilcrow">¶</a></p
         <h3 id="name-content-signing">
 <a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-content-signing" class="section-name selfRef">Content Signing</a>
         </h3>
-<p id="section-8.1-1">The <code>signature</code> field in an MLSPlaintext object is computed using the
-signing private key corresponding to the credential at the leaf in
-the tree indicated by the sender field.  The signature covers the
-plaintext metadata and message content, which is all of
-MLSPlaintext except for the <code>signature</code> field.  The signature also covers the
-GroupContext for the current epoch, so that signatures are specific to a given
-group and epoch.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
-<div class="artwork art-text alignLeft" id="section-8.1-2">
+<p id="section-8.1-1">The <code>signature</code> field in an MLSPlaintext object authenticates the sender of the
+MLSPlaintext message.  The input to the signature is an MLSPlaintextTBS
+structure, which encodes the content and metadata of the message as well a
+context for the signature that associates to the group messages sent within the
+group.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
+<p id="section-8.1-2">In cases where the sender is a member of the group, the context contains the
+GroupContext for the current epoch and a "membership token" that authenticates
+that the sender is a member of the group.  As a result, for messages sent within
+a group, the signature authenticates not only the member's individual identity,
+but also their membership in the group.<a href="#section-8.1-2" class="pilcrow">¶</a></p>
+<div class="artwork art-text alignLeft" id="section-8.1-3">
 <pre>
 struct {
     select (MLSPlaintextTBS.sender.sender_type) {
@@ -2877,21 +2880,21 @@ struct {
   MLSPlaintextTBS tbs;
   opaque signature&lt;0..2^16-1&gt;;
 } MLSPlaintextTBM;
-</pre><a href="#section-8.1-2" class="pilcrow">¶</a>
+</pre><a href="#section-8.1-3" class="pilcrow">¶</a>
 </div>
-<p id="section-8.1-3">The <code>membership_tag</code> field in the MLSPlaintext object authenticates the
+<p id="section-8.1-4">The <code>membership_tag</code> field in the MLSPlaintext object authenticates the
 sender's membership in the group.  For an MLSPlaintext with a sender type other
 than <code>member</code>, this field MUST be set to the zero-length octet string.  For
-messages sent by members, it MUST be set to the following value:<a href="#section-8.1-3" class="pilcrow">¶</a></p>
-<div class="artwork art-text alignLeft" id="section-8.1-4">
+messages sent by members, it MUST be set to the following value:<a href="#section-8.1-4" class="pilcrow">¶</a></p>
+<div class="artwork art-text alignLeft" id="section-8.1-5">
 <pre>
 membership_tag = MAC(membership_key, MLSPlaintextTBM);
-</pre><a href="#section-8.1-4" class="pilcrow">¶</a>
+</pre><a href="#section-8.1-5" class="pilcrow">¶</a>
 </div>
-<p id="section-8.1-5">When the sender type is <code>member</code>, the <code>membership_tag</code> field MUST contain a
+<p id="section-8.1-6">When the sender type is <code>member</code>, the <code>membership_tag</code> field MUST contain a
 full-size MAC output, and MUST be verified before verifying the signature or
 processing the message content.  For other sender types, the <code>membership_tag</code>
-field MUST be set to the zero-length octet string.<a href="#section-8.1-5" class="pilcrow">¶</a></p>
+field MUST be set to the zero-length octet string.<a href="#section-8.1-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="content-encryption">
