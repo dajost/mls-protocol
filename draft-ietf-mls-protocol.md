@@ -1679,7 +1679,7 @@ might want to change their keys in order to achieve post-compromise security.
 In MLS, each such change is accomplished by a two-step process:
 
 1. A proposal to make the change is broadcast to the group in a Proposal message
-2. A member of the group broadcasts a Commit message that causes one or more
+2. A member of the group or a new member broadcast a Commit message that causes one or more
    proposed changes to enter into effect
 
 The group thus evolves from one cryptographic state to another each time a
@@ -1925,6 +1925,31 @@ key for nodes in its direct path.  This creates the possibility
 that a malicious participant could cause a denial of service by sending a
 handshake message with invalid values for public keys in the ratchet
 tree. ]]
+
+### External Commits
+
+External Commits are a mechanism for new members (external parties that want to become members of the group) to add themselves to a group, without requiring that an existing member has to come online to issue a Commit that references an Add Proposal.
+
+Whether existing members of the group will accept or reject an External Commit follows the same rules that are applied to other handshake messages.
+
+New members can create and issue an External Commit if they have access to the following information:
+
+ - group ID
+ - current epoch ID
+ - ciphersuite
+ - public tree
+ - confirmed transcript hash
+ - group extensions
+
+The information above are deemed public data in general, but applications can choose to not make them available to new members in order to prevent External Commits.
+
+External Commits work like regular Commits, with a few differences:
+
+ - External Commits MUST reference the Add Proposal that adds the issuing new member to the group
+ - External Commits MUST be signed by the new member
+ - External Commits MUST contain a `path` field (and is therefore a "full" Commit)
+ - When processing a Commit, both existing and new members MUST use an empty init secret (all-zero vector of size Hash.length)
+ - If the Add Proposal is also issued by the new member, its member SenderType MUST be `new_member`
 
 ### Welcoming New Members
 
