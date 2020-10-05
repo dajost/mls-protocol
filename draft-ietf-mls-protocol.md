@@ -1941,7 +1941,19 @@ New members can create and issue an External Commit if they have access to the f
  - confirmed transcript hash
  - group extensions
 
-The information above are deemed public data in general, but applications can choose to not make them available to new members in order to prevent External Commits.
+This information is aggregated in `ExternalCommitInfo` as follows:
+
+```
+struct {
+    CipherSuite cipher_suite;
+    GroupContext group_context;
+    optional<Node> ratchet_tree<1..2^32-1>;
+} ExternalCommitInfo;
+```
+
+Note that the `ratchet_tree` field is used the same way as in the {{ratchet-tree-extension}}.
+
+The information above are not deemed public data in general, but applications can choose to make them available to new members in order to allow External Commits.
 
 External Commits work like regular Commits, with a few differences:
 
