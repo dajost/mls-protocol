@@ -1679,7 +1679,7 @@ might want to change their keys in order to achieve post-compromise security.
 In MLS, each such change is accomplished by a two-step process:
 
 1. A proposal to make the change is broadcast to the group in a Proposal message
-2. A member of the group or a new member broadcast a Commit message that causes one or more
+2. A member of the group or a new member broadcasts a Commit message that causes one or more
    proposed changes to enter into effect
 
 The group thus evolves from one cryptographic state to another each time a
